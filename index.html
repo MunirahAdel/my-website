@@ -1,13 +1,132 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My Website</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Munirah Adel — Coming Soon</title>
+  <meta name="description" content="Munirah Adel — website coming soon." />
+  <style>
+    :root {
+      --bg: #0b0b0f;
+      --fg: #f4f4f7;
+      --muted: rgba(244,244,247,.72);
+      --line: rgba(244,244,247,.14);
+      --card: rgba(244,244,247,.06);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 70% 20%, rgba(244,244,247,.10), transparent 60%),
+                  radial-gradient(900px 600px at 20% 70%, rgba(244,244,247,.07), transparent 55%),
+                  var(--bg);
+      color: var(--fg);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .wrap { width: min(900px, 100%); }
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(244,244,247,.06), rgba(244,244,247,.03));
+      border-radius: 24px;
+      padding: clamp(20px, 4vw, 40px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .card:before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: radial-gradient(600px 240px at 20% 20%, rgba(244,244,247,.12), transparent 60%);
+      pointer-events: none;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      font-size: clamp(28px, 4vw, 44px);
+    }
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(14px, 1.6vw, 18px);
+      line-height: 1.6;
+      max-width: 60ch;
+    }
+    .row {
+      margin-top: 26px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    a.button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(244,244,247,.06);
+      color: var(--fg);
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform .12s ease, background .12s ease;
+    }
+    a.button:hover { transform: translateY(-1px); background: rgba(244,244,247,.10); }
+    .note {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .sig {
+      margin-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: baseline;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .smallcaps { letter-spacing: .08em; text-transform: uppercase; font-size: 12px; color: rgba(244,244,247,.62); }
+  </style>
 </head>
 <body>
+  <main class="wrap">
+    <section class="card" aria-label="Coming soon">
+      <div class="smallcaps">Munirah Adel</div>
+      <h1>Coming soon.</h1>
+      <p>
+        I’m building a new space for projects, research, and generative work.
+        Check back soon — or reach me below.
+      </p>
 
-  <h1>It works 🎉</h1>
-  <p>This is my homepage.</p>
+      <div class="row">
+        <!-- Replace these with your real links -->
+        <a class="button" href="mailto:hello@munirahadel.co">Email</a>
+        <a class="button" href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
+        <a class="button" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
 
+      <div class="note">
+        In the meantime, this page will stay light + fast while the full site is in progress.
+      </div>
+
+      <div class="sig">
+        <div>© <span id="y"></span> Munirah Adel</div>
+        <div>munirahadel.co</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
