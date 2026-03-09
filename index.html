@@ -32,14 +32,12 @@
 
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 100;
-      opacity: 0.6;
+      pointer-events: none; z-index: 100; opacity: 0.6;
     }
 
+    /* ── CURSOR ── */
     .cursor {
       position: fixed; width: 8px; height: 8px;
       background: var(--accent); border-radius: 50%;
@@ -55,6 +53,7 @@
       transition: width 0.2s ease, height 0.2s ease;
     }
 
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 90;
       padding: 28px 48px;
@@ -77,17 +76,48 @@
     }
     .nav-links a:hover { color: var(--fg); }
 
+    /* ── HERO ── */
     .hero {
       min-height: 100vh; display: flex; flex-direction: column;
-      justify-content: flex-end; padding: 0 48px 80px; position: relative;
+      justify-content: flex-end; padding: 0 48px 80px;
+      position: relative; overflow: hidden;
     }
-    .hero-bg {
-      position: absolute; inset: 0;
+
+    /* Background video */
+    .hero-video {
+      position: absolute; inset: 0; z-index: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      /* Fade + desaturate — adjust opacity to taste */
+      opacity: 0.18;
+      filter: grayscale(60%) brightness(0.7);
+      /* Fade in only once loaded */
+      transition: opacity 1.2s ease;
+    }
+    .hero-video.loaded { opacity: 0.18; }
+
+    /* Gradient vignette over the video so text stays readable */
+    .hero-vignette {
+      position: absolute; inset: 0; z-index: 1;
       background:
-        radial-gradient(ellipse 800px 600px at 80% 20%, rgba(200,184,154,.06), transparent 60%),
-        radial-gradient(ellipse 600px 400px at 10% 80%, rgba(200,184,154,.04), transparent 55%);
+        linear-gradient(to top,  var(--bg) 12%, transparent 55%),
+        linear-gradient(to right, var(--bg) 0%,  transparent 40%),
+        radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(10,10,13,.55) 100%);
       pointer-events: none;
     }
+
+    /* Subtle radial accent on top of everything */
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 2;
+      background:
+        radial-gradient(ellipse 800px 600px at 80% 20%, rgba(200,184,154,.05), transparent 60%),
+        radial-gradient(ellipse 600px 400px at 10% 80%, rgba(200,184,154,.03), transparent 55%);
+      pointer-events: none;
+    }
+
+    /* All hero text sits above video layers */
+    .hero-eyebrow, .hero-title, .hero-sub, .hero-scroll { position: relative; z-index: 3; }
+
     .hero-eyebrow {
       font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--accent); margin-bottom: 24px;
@@ -102,12 +132,11 @@
     .hero-title em { font-style: italic; color: var(--accent); }
     .hero-sub {
       margin-top: 32px; font-size: 13px; color: var(--muted);
-      line-height: 1.7; max-width: 44ch;
-      letter-spacing: -0.03em;
+      line-height: 1.7; max-width: 44ch; letter-spacing: -0.03em;
       opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards;
     }
     .hero-scroll {
-      position: absolute; bottom: 40px; right: 48px;
+      position: absolute; bottom: 40px; right: 48px; z-index: 3;
       writing-mode: vertical-rl; font-size: 10px; letter-spacing: 0.14em;
       text-transform: uppercase; color: var(--muted);
       display: flex; align-items: center; gap: 10px;
@@ -118,6 +147,7 @@
       background: linear-gradient(to bottom, var(--muted), transparent);
     }
 
+    /* ── SECTIONS ── */
     section { padding: 120px 48px; max-width: 1200px; margin: 0 auto; }
 
     .section-label {
@@ -126,10 +156,10 @@
       display: flex; align-items: center; gap: 16px;
     }
     .section-label::before {
-      content: ''; width: 40px; height: 1px;
-      background: var(--accent); opacity: 0.5;
+      content: ''; width: 40px; height: 1px; background: var(--accent); opacity: 0.5;
     }
 
+    /* ── ABOUT ── */
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
     .about-title {
       font-family: 'Cormorant', serif; font-size: clamp(36px, 4vw, 56px);
@@ -147,6 +177,7 @@
     }
     .link-pill:hover { border-color: var(--accent); background: rgba(200,184,154,.06); }
 
+    /* ── WORK ── */
     .project-item {
       display: grid; grid-template-columns: 80px 1fr auto;
       align-items: center; gap: 32px; padding: 28px 0;
@@ -177,6 +208,7 @@
     .project-item:hover .project-arrow { opacity: 1; right: -4px; }
     .project-item.placeholder { opacity: 0.35; pointer-events: none; }
 
+    /* ── RESEARCH ── */
     .research-item { padding: 32px 0; border-bottom: 1px solid var(--line); }
     .research-item:first-child { border-top: 1px solid var(--line); }
     .research-meta { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
@@ -186,6 +218,74 @@
     }
     .research-desc { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 60ch; letter-spacing: -0.03em; }
 
+    /* ── LECTURES & WORKSHOPS ── */
+    .lectures-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+    .lecture-card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .lecture-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(200,184,154,.3), transparent);
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .lecture-card:hover { border-color: rgba(200,184,154,.25); background: rgba(238,237,232,.06); }
+    .lecture-card:hover::before { opacity: 1; }
+
+    .lecture-type {
+      font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .lecture-type::before {
+      content: ''; width: 16px; height: 1px; background: var(--accent); opacity: 0.6;
+    }
+    .lecture-title {
+      font-family: 'Cormorant', serif; font-size: clamp(18px, 1.8vw, 26px);
+      font-weight: 400; line-height: 1.25; letter-spacing: -0.01em;
+      color: var(--fg); margin-bottom: 12px;
+    }
+    .lecture-desc {
+      font-size: 12px; color: var(--muted); line-height: 1.75; letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .lecture-meta {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      font-size: 10px; color: var(--muted); letter-spacing: 0.04em;
+      border-top: 1px solid var(--line); padding-top: 16px; margin-top: auto;
+    }
+    .lecture-meta span { display: flex; align-items: center; gap: 6px; }
+    .lecture-meta span::before { content: '·'; color: var(--accent); }
+    .lecture-meta span:first-child::before { display: none; }
+
+    /* Tall card that spans 2 rows */
+    .lecture-card.featured {
+      grid-row: span 2;
+      display: flex; flex-direction: column;
+    }
+    .lecture-card.featured .lecture-title {
+      font-size: clamp(24px, 2.4vw, 36px);
+    }
+    .lecture-tag-list {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+    }
+    .lecture-tag {
+      font-size: 10px; letter-spacing: 0.06em;
+      padding: 4px 12px; border: 1px solid var(--line); border-radius: 100px;
+      color: var(--muted);
+    }
+
+    /* ── CONTACT ── */
     .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; }
     .contact-title {
       font-family: 'Cormorant', serif; font-size: clamp(40px, 5vw, 72px);
@@ -203,28 +303,46 @@
     .contact-link:hover { border-color: var(--accent); background: rgba(200,184,154,.04); }
     .contact-link-arrow { color: var(--accent); font-size: 16px; }
 
+    /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--line); padding: 32px 48px;
       display: flex; justify-content: space-between; align-items: center;
       font-size: 11px; color: var(--muted); letter-spacing: -0.01em;
     }
 
+    /* ── ANIMATIONS ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
+    /* ── MOBILE ── */
     @media (max-width: 768px) {
       nav { padding: 20px 24px; }
       .nav-links { gap: 20px; }
+      .nav-links a { font-size: 10px; }
+
       .hero { padding: 0 24px 60px; }
       .hero-scroll { right: 24px; }
+
+      /* On mobile, reduce video opacity further and keep it cropped to center */
+      .hero-video { opacity: 0.12; object-position: center center; }
+
       section { padding: 80px 24px; }
       .about-grid, .contact-wrap { grid-template-columns: 1fr; gap: 40px; }
       .project-item { grid-template-columns: 50px 1fr auto; gap: 16px; }
+
+      .lectures-grid { grid-template-columns: 1fr; gap: 12px; }
+      .lecture-card.featured { grid-row: span 1; }
+
       footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-video { display: none; }
     }
   </style>
 </head>
@@ -238,12 +356,34 @@
       <li><a href="#work">Work</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#research">Research</a></li>
+      <li><a href="#lectures">Lectures</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
+  <!-- ══════════════════════════════════════════
+       HERO — background video from Pexels (free)
+       Replace the src values with your own footage
+       when ready. The poster= image shows instantly
+       while the video loads so there's no flash.
+  ══════════════════════════════════════════ -->
   <div class="hero">
+    <video
+      class="hero-video"
+      id="heroVideo"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster="https://images.pexels.com/videos/3045163/pictures/preview-0.jpg"
+    >
+      <!-- Pexels free stock: abstract light particles / generative feel -->
+      <source src="https://videos.pexels.com/video-files/3045163/3045163-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-vignette"></div>
     <div class="hero-bg"></div>
+
     <div class="hero-eyebrow">Portfolio — <span id="y"></span></div>
     <h1 class="hero-title">
       Projects,<br>
@@ -258,6 +398,7 @@
     <div class="hero-scroll">Scroll</div>
   </div>
 
+  <!-- WORK -->
   <section id="work">
     <div class="section-label">Selected Work</div>
     <div class="reveal">
@@ -296,6 +437,7 @@
     </div>
   </section>
 
+  <!-- ABOUT -->
   <section id="about">
     <div class="section-label">About</div>
     <div class="about-grid reveal">
@@ -316,6 +458,7 @@
     </div>
   </section>
 
+  <!-- RESEARCH -->
   <section id="research">
     <div class="section-label">Research &amp; Writing</div>
     <div class="reveal">
@@ -332,6 +475,66 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════════
+       LECTURES & WORKSHOPS
+       Duplicate .lecture-card blocks to add more.
+       Use class "featured" on one card to make it
+       span two rows as an anchor piece.
+  ══════════════════════════════════════════ -->
+  <section id="lectures">
+    <div class="section-label">Lectures &amp; Workshops</div>
+    <div class="lectures-grid reveal">
+
+      <!-- Featured / larger card -->
+      <div class="lecture-card featured">
+        <div class="lecture-type">Workshop</div>
+        <div class="lecture-title">Workshop Title — Add Your Own Here</div>
+        <div class="lecture-desc">
+          A description of the workshop — what participants explored, the methods used,
+          and what the session aimed to open up. Could be a few sentences or a short paragraph.
+        </div>
+        <div class="lecture-tag-list">
+          <span class="lecture-tag">Generative Systems</span>
+          <span class="lecture-tag">Hands-on</span>
+          <span class="lecture-tag">Beginner–Intermediate</span>
+        </div>
+        <div class="lecture-meta" style="margin-top: 24px;">
+          <span>Institution or Venue</span>
+          <span>2024</span>
+          <span>City</span>
+        </div>
+      </div>
+
+      <!-- Standard card -->
+      <div class="lecture-card">
+        <div class="lecture-type">Lecture</div>
+        <div class="lecture-title">Lecture Title One</div>
+        <div class="lecture-desc">
+          Brief description of the talk — the central argument, context, or questions it raised.
+        </div>
+        <div class="lecture-meta">
+          <span>Institution or Conference</span>
+          <span>2024</span>
+        </div>
+      </div>
+
+      <!-- Standard card -->
+      <div class="lecture-card">
+        <div class="lecture-type">Panel</div>
+        <div class="lecture-title">Panel or Talk Title Two</div>
+        <div class="lecture-desc">
+          Brief description of the panel — topic, co-speakers, or the thread of discussion.
+        </div>
+        <div class="lecture-meta">
+          <span>Event or Venue</span>
+          <span>2023</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
   <section id="contact">
     <div class="section-label">Get in touch</div>
     <div class="contact-wrap reveal">
@@ -358,15 +561,35 @@
   </footer>
 
   <script>
+    // Year
     const yr = new Date().getFullYear();
     document.getElementById("y").textContent = yr;
     document.getElementById("y2").textContent = yr;
 
+    // Nav scroll state
     const nav = document.getElementById("nav");
     window.addEventListener("scroll", () => { nav.classList.toggle("scrolled", window.scrollY > 40); });
 
+    // Lazy-load the hero video: only start loading after page is interactive
+    // This keeps LCP fast — the poster image renders instantly.
+    const video = document.getElementById("heroVideo");
+    if (video) {
+      // On mobile, skip autoplay to save data; show just the poster
+      if (window.innerWidth < 768 || window.matchMedia("(prefers-reduced-data: reduce)").matches) {
+        video.remove();
+      } else {
+        // Defer src loading until after first paint
+        window.addEventListener("load", () => {
+          video.setAttribute("preload", "auto");
+          video.load();
+          video.play().catch(() => {}); // silent fail if blocked
+        });
+      }
+    }
+
+    // Cursor
     const cursor = document.getElementById("cursor");
-    const ring = document.getElementById("cursorRing");
+    const ring   = document.getElementById("cursorRing");
     let mx = 0, my = 0, rx = 0, ry = 0;
     document.addEventListener("mousemove", e => {
       mx = e.clientX; my = e.clientY;
@@ -382,10 +605,11 @@
       el.addEventListener("mouseleave", () => { cursor.style.width = "8px"; cursor.style.height = "8px"; ring.style.width = "32px"; ring.style.height = "32px"; });
     });
 
+    // Scroll reveal
     const reveals = document.querySelectorAll(".reveal");
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08 });
     reveals.forEach(el => obs.observe(el));
   </script>
 </body>
