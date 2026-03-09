@@ -83,25 +83,27 @@
       position: relative; overflow: hidden;
     }
 
-    /* Canvas background — replaces video, same visual role */
-    #heroCanvas {
-      position: absolute; inset: 0; z-index: 0;
-      width: 100%; height: 100%;
-    }
-
-    /* Video (used on real site, hidden if canvas is active) */
     .hero-video {
-      position: absolute; inset: 0; z-index: 0;
-      width: 100%; height: 100%; object-fit: cover;
-      opacity: 0.18; filter: grayscale(60%) brightness(0.7);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      opacity: 0.22;
+      filter: grayscale(50%) brightness(0.65);
+      z-index: 0;
+      /* start invisible, fade in once playing */
+      transition: opacity 1.5s ease;
     }
+    .hero-video.hidden { opacity: 0; }
 
     .hero-vignette {
       position: absolute; inset: 0; z-index: 1;
       background:
-        linear-gradient(to top,  var(--bg) 12%, transparent 55%),
-        linear-gradient(to right, var(--bg) 0%,  transparent 40%),
-        radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(10,10,13,.55) 100%);
+        linear-gradient(to top,  var(--bg) 14%, transparent 52%),
+        linear-gradient(to right, var(--bg) 0%,  transparent 45%),
+        radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(10,10,13,.5) 100%);
       pointer-events: none;
     }
 
@@ -298,6 +300,7 @@
       .nav-links a { font-size: 10px; }
       .hero { padding: 0 24px 60px; }
       .hero-scroll { right: 24px; }
+      .hero-video { opacity: 0.14; }
       section { padding: 80px 24px; }
       .about-grid, .contact-wrap { grid-template-columns: 1fr; gap: 40px; }
       .project-item { grid-template-columns: 50px 1fr auto; gap: 16px; }
@@ -307,7 +310,6 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      #heroCanvas { display: none; }
       .hero-video { display: none; }
     }
   </style>
@@ -328,19 +330,17 @@
   </nav>
 
   <div class="hero">
-    <!-- Canvas animation — shows in preview and as fallback.
-         On your live site, swap this canvas tag for the <video> block below. -->
-<video class="hero-video" autoplay muted loop playsinline preload="none">
-  <source src="assets/HeroWeb.mp4" type="video/mp4" />
-</video>
-    
-
-    <!-- ─── SWAP IN YOUR VIDEO for production ───────────────────────
-    <video class="hero-video" autoplay muted loop playsinline preload="none"
-      poster="https://images.pexels.com/videos/3045163/pictures/preview-0.jpg">
-      <source src="https://videos.pexels.com/video-files/3045163/3045163-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+    <video
+      id="heroVideo"
+      class="hero-video hidden"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    >
+      <source src="assets/HeroWeb_.mp4" type="video/mp4" />
     </video>
-    ──────────────────────────────────────────────────────────────── -->
 
     <div class="hero-vignette"></div>
     <div class="hero-bg"></div>
@@ -501,18 +501,34 @@
   </footer>
 
   <script>
-    // ── Year ──
     const yr = new Date().getFullYear();
     document.getElementById("y").textContent = yr;
     document.getElementById("y2").textContent = yr;
 
-    // ── Nav scroll ──
     const nav = document.getElementById("nav");
     window.addEventListener("scroll", () => { nav.classList.toggle("scrolled", window.scrollY > 40); });
 
-  
+    // Video: fade in once it starts playing
+    const video = document.getElementById("heroVideo");
+    if (video) {
+      const tryPlay = () => {
+        video.play().then(() => {
+          video.classList.remove("hidden");
+        }).catch(() => {
+          // Autoplay blocked — still show it, browser may play on interaction
+          video.classList.remove("hidden");
+        });
+      };
+      if (video.readyState >= 3) {
+        tryPlay();
+      } else {
+        video.addEventListener("canplaythrough", tryPlay, { once: true });
+        // Fallback: show after 2s even if canplaythrough hasn't fired
+        setTimeout(() => video.classList.remove("hidden"), 2000);
+      }
+    }
 
-    // ── Cursor ──
+    // Cursor
     const cursor = document.getElementById("cursor");
     const ring   = document.getElementById("cursorRing");
     let mx = 0, my = 0, rx = 0, ry = 0;
@@ -530,7 +546,7 @@
       el.addEventListener("mouseleave", () => { cursor.style.width = "8px"; cursor.style.height = "8px"; ring.style.width = "32px"; ring.style.height = "32px"; });
     });
 
-    // ── Scroll reveal ──
+    // Scroll reveal
     const reveals = document.querySelectorAll(".reveal");
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
@@ -539,5 +555,3 @@
   </script>
 </body>
 </html>
-
-
