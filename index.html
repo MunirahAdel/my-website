@@ -83,20 +83,19 @@
       position: relative; overflow: hidden;
     }
 
-    /* Background video */
-    .hero-video {
+    /* Canvas background — replaces video, same visual role */
+    #heroCanvas {
       position: absolute; inset: 0; z-index: 0;
       width: 100%; height: 100%;
-      object-fit: cover;
-      /* Fade + desaturate — adjust opacity to taste */
-      opacity: 0.18;
-      filter: grayscale(60%) brightness(0.7);
-      /* Fade in only once loaded */
-      transition: opacity 1.2s ease;
     }
-    .hero-video.loaded { opacity: 0.18; }
 
-    /* Gradient vignette over the video so text stays readable */
+    /* Video (used on real site, hidden if canvas is active) */
+    .hero-video {
+      position: absolute; inset: 0; z-index: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      opacity: 0.18; filter: grayscale(60%) brightness(0.7);
+    }
+
     .hero-vignette {
       position: absolute; inset: 0; z-index: 1;
       background:
@@ -106,7 +105,6 @@
       pointer-events: none;
     }
 
-    /* Subtle radial accent on top of everything */
     .hero-bg {
       position: absolute; inset: 0; z-index: 2;
       background:
@@ -115,8 +113,7 @@
       pointer-events: none;
     }
 
-    /* All hero text sits above video layers */
-    .hero-eyebrow, .hero-title, .hero-sub, .hero-scroll { position: relative; z-index: 3; }
+    .hero-eyebrow, .hero-title, .hero-sub { position: relative; z-index: 3; }
 
     .hero-eyebrow {
       font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
@@ -219,46 +216,32 @@
     .research-desc { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 60ch; letter-spacing: -0.03em; }
 
     /* ── LECTURES & WORKSHOPS ── */
-    .lectures-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-    }
+    .lectures-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
     .lecture-card {
-      background: var(--card-bg);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 32px;
-      position: relative;
-      overflow: hidden;
+      background: var(--card-bg); border: 1px solid var(--line);
+      border-radius: 16px; padding: 32px;
+      position: relative; overflow: hidden;
       transition: border-color 0.25s, background 0.25s;
     }
     .lecture-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(to right, transparent, rgba(200,184,154,.3), transparent);
       opacity: 0; transition: opacity 0.25s;
     }
     .lecture-card:hover { border-color: rgba(200,184,154,.25); background: rgba(238,237,232,.06); }
     .lecture-card:hover::before { opacity: 1; }
-
     .lecture-type {
       font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--accent); margin-bottom: 14px;
       display: inline-flex; align-items: center; gap: 8px;
     }
-    .lecture-type::before {
-      content: ''; width: 16px; height: 1px; background: var(--accent); opacity: 0.6;
-    }
+    .lecture-type::before { content: ''; width: 16px; height: 1px; background: var(--accent); opacity: 0.6; }
     .lecture-title {
       font-family: 'Cormorant', serif; font-size: clamp(18px, 1.8vw, 26px);
       font-weight: 400; line-height: 1.25; letter-spacing: -0.01em;
       color: var(--fg); margin-bottom: 12px;
     }
-    .lecture-desc {
-      font-size: 12px; color: var(--muted); line-height: 1.75; letter-spacing: -0.02em;
-      margin-bottom: 24px;
-    }
+    .lecture-desc { font-size: 12px; color: var(--muted); line-height: 1.75; letter-spacing: -0.02em; margin-bottom: 24px; }
     .lecture-meta {
       display: flex; gap: 20px; flex-wrap: wrap;
       font-size: 10px; color: var(--muted); letter-spacing: 0.04em;
@@ -267,22 +250,12 @@
     .lecture-meta span { display: flex; align-items: center; gap: 6px; }
     .lecture-meta span::before { content: '·'; color: var(--accent); }
     .lecture-meta span:first-child::before { display: none; }
-
-    /* Tall card that spans 2 rows */
-    .lecture-card.featured {
-      grid-row: span 2;
-      display: flex; flex-direction: column;
-    }
-    .lecture-card.featured .lecture-title {
-      font-size: clamp(24px, 2.4vw, 36px);
-    }
-    .lecture-tag-list {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
-    }
+    .lecture-card.featured { grid-row: span 2; display: flex; flex-direction: column; }
+    .lecture-card.featured .lecture-title { font-size: clamp(24px, 2.4vw, 36px); }
+    .lecture-tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
     .lecture-tag {
       font-size: 10px; letter-spacing: 0.06em;
-      padding: 4px 12px; border: 1px solid var(--line); border-radius: 100px;
-      color: var(--muted);
+      padding: 4px 12px; border: 1px solid var(--line); border-radius: 100px; color: var(--muted);
     }
 
     /* ── CONTACT ── */
@@ -321,27 +294,20 @@
     /* ── MOBILE ── */
     @media (max-width: 768px) {
       nav { padding: 20px 24px; }
-      .nav-links { gap: 20px; }
+      .nav-links { gap: 16px; }
       .nav-links a { font-size: 10px; }
-
       .hero { padding: 0 24px 60px; }
       .hero-scroll { right: 24px; }
-
-      /* On mobile, reduce video opacity further and keep it cropped to center */
-      .hero-video { opacity: 0.12; object-position: center center; }
-
       section { padding: 80px 24px; }
       .about-grid, .contact-wrap { grid-template-columns: 1fr; gap: 40px; }
       .project-item { grid-template-columns: 50px 1fr auto; gap: 16px; }
-
       .lectures-grid { grid-template-columns: 1fr; gap: 12px; }
       .lecture-card.featured { grid-row: span 1; }
-
       footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
     }
 
-    /* Reduce motion */
     @media (prefers-reduced-motion: reduce) {
+      #heroCanvas { display: none; }
       .hero-video { display: none; }
     }
   </style>
@@ -361,26 +327,18 @@
     </ul>
   </nav>
 
-  <!-- ══════════════════════════════════════════
-       HERO — background video from Pexels (free)
-       Replace the src values with your own footage
-       when ready. The poster= image shows instantly
-       while the video loads so there's no flash.
-  ══════════════════════════════════════════ -->
   <div class="hero">
-    <video
-      class="hero-video"
-      id="heroVideo"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="none"
-      poster="https://images.pexels.com/videos/3045163/pictures/preview-0.jpg"
-    >
-      <!-- Pexels free stock: abstract light particles / generative feel -->
+    <!-- Canvas animation — shows in preview and as fallback.
+         On your live site, swap this canvas tag for the <video> block below. -->
+    <canvas id="heroCanvas"></canvas>
+
+    <!-- ─── SWAP IN YOUR VIDEO for production ───────────────────────
+    <video class="hero-video" autoplay muted loop playsinline preload="none"
+      poster="https://images.pexels.com/videos/3045163/pictures/preview-0.jpg">
       <source src="https://videos.pexels.com/video-files/3045163/3045163-uhd_2560_1440_25fps.mp4" type="video/mp4" />
     </video>
+    ──────────────────────────────────────────────────────────────── -->
+
     <div class="hero-vignette"></div>
     <div class="hero-bg"></div>
 
@@ -398,7 +356,6 @@
     <div class="hero-scroll">Scroll</div>
   </div>
 
-  <!-- WORK -->
   <section id="work">
     <div class="section-label">Selected Work</div>
     <div class="reveal">
@@ -437,7 +394,6 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
   <section id="about">
     <div class="section-label">About</div>
     <div class="about-grid reveal">
@@ -458,7 +414,6 @@
     </div>
   </section>
 
-  <!-- RESEARCH -->
   <section id="research">
     <div class="section-label">Research &amp; Writing</div>
     <div class="reveal">
@@ -475,17 +430,9 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       LECTURES & WORKSHOPS
-       Duplicate .lecture-card blocks to add more.
-       Use class "featured" on one card to make it
-       span two rows as an anchor piece.
-  ══════════════════════════════════════════ -->
   <section id="lectures">
     <div class="section-label">Lectures &amp; Workshops</div>
     <div class="lectures-grid reveal">
-
-      <!-- Featured / larger card -->
       <div class="lecture-card featured">
         <div class="lecture-type">Workshop</div>
         <div class="lecture-title">Workshop Title — Add Your Own Here</div>
@@ -504,37 +451,27 @@
           <span>City</span>
         </div>
       </div>
-
-      <!-- Standard card -->
       <div class="lecture-card">
         <div class="lecture-type">Lecture</div>
         <div class="lecture-title">Lecture Title One</div>
-        <div class="lecture-desc">
-          Brief description of the talk — the central argument, context, or questions it raised.
-        </div>
+        <div class="lecture-desc">Brief description of the talk — the central argument, context, or questions it raised.</div>
         <div class="lecture-meta">
           <span>Institution or Conference</span>
           <span>2024</span>
         </div>
       </div>
-
-      <!-- Standard card -->
       <div class="lecture-card">
         <div class="lecture-type">Panel</div>
         <div class="lecture-title">Panel or Talk Title Two</div>
-        <div class="lecture-desc">
-          Brief description of the panel — topic, co-speakers, or the thread of discussion.
-        </div>
+        <div class="lecture-desc">Brief description of the panel — topic, co-speakers, or the thread of discussion.</div>
         <div class="lecture-meta">
           <span>Event or Venue</span>
           <span>2023</span>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contact">
     <div class="section-label">Get in touch</div>
     <div class="contact-wrap reveal">
@@ -561,33 +498,96 @@
   </footer>
 
   <script>
-    // Year
+    // ── Year ──
     const yr = new Date().getFullYear();
     document.getElementById("y").textContent = yr;
     document.getElementById("y2").textContent = yr;
 
-    // Nav scroll state
+    // ── Nav scroll ──
     const nav = document.getElementById("nav");
     window.addEventListener("scroll", () => { nav.classList.toggle("scrolled", window.scrollY > 40); });
 
-    // Lazy-load the hero video: only start loading after page is interactive
-    // This keeps LCP fast — the poster image renders instantly.
-    const video = document.getElementById("heroVideo");
-    if (video) {
-      // On mobile, skip autoplay to save data; show just the poster
-      if (window.innerWidth < 768 || window.matchMedia("(prefers-reduced-data: reduce)").matches) {
-        video.remove();
-      } else {
-        // Defer src loading until after first paint
-        window.addEventListener("load", () => {
-          video.setAttribute("preload", "auto");
-          video.load();
-          video.play().catch(() => {}); // silent fail if blocked
-        });
-      }
-    }
+    // ── Hero canvas animation ──
+    // Slow-drifting particles + soft glow blobs, same visual feel as the stock video.
+    // On your live Netlify site, remove the <canvas> tag and uncomment the <video> block instead.
+    (function () {
+      const canvas = document.getElementById("heroCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
 
-    // Cursor
+      function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      // Soft glow blobs
+      const blobs = Array.from({ length: 5 }, (_, i) => ({
+        x: Math.random(), y: Math.random(),
+        r: 0.25 + Math.random() * 0.2,
+        vx: (Math.random() - 0.5) * 0.00012,
+        vy: (Math.random() - 0.5) * 0.00008,
+        hue: i < 2 ? 38 : 30,          // warm amber tones matching --accent
+        alpha: 0.04 + Math.random() * 0.04,
+      }));
+
+      // Fine particles
+      const pts = Array.from({ length: 90 }, () => ({
+        x: Math.random(), y: Math.random(),
+        vx: (Math.random() - 0.5) * 0.00018,
+        vy: -0.00006 - Math.random() * 0.00014,  // drift upward slowly
+        size: 0.6 + Math.random() * 1.2,
+        alpha: 0.15 + Math.random() * 0.35,
+        life: Math.random(),
+      }));
+
+      function draw() {
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        // Blobs
+        blobs.forEach(b => {
+          b.x += b.vx; b.y += b.vy;
+          if (b.x < -b.r) b.x = 1 + b.r;
+          if (b.x > 1 + b.r) b.x = -b.r;
+          if (b.y < -b.r) b.y = 1 + b.r;
+          if (b.y > 1 + b.r) b.y = -b.r;
+
+          const g = ctx.createRadialGradient(
+            b.x * W, b.y * H, 0,
+            b.x * W, b.y * H, b.r * W
+          );
+          g.addColorStop(0, `hsla(${b.hue}, 40%, 70%, ${b.alpha})`);
+          g.addColorStop(1, `hsla(${b.hue}, 40%, 70%, 0)`);
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, W, H);
+        });
+
+        // Particles
+        pts.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          p.life += 0.003;
+          if (p.y < -0.02 || p.life > 1) {
+            // reset at bottom
+            p.x = Math.random(); p.y = 1.02;
+            p.life = 0;
+            p.vx = (Math.random() - 0.5) * 0.00018;
+            p.vy = -0.00006 - Math.random() * 0.00014;
+          }
+          const fade = Math.sin(p.life * Math.PI); // fade in + out
+          ctx.beginPath();
+          ctx.arc(p.x * W, p.y * H, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(200, 184, 154, ${p.alpha * fade * 0.6})`;
+          ctx.fill();
+        });
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ── Cursor ──
     const cursor = document.getElementById("cursor");
     const ring   = document.getElementById("cursorRing");
     let mx = 0, my = 0, rx = 0, ry = 0;
@@ -605,7 +605,7 @@
       el.addEventListener("mouseleave", () => { cursor.style.width = "8px"; cursor.style.height = "8px"; ring.style.width = "32px"; ring.style.height = "32px"; });
     });
 
-    // Scroll reveal
+    // ── Scroll reveal ──
     const reveals = document.querySelectorAll(".reveal");
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
