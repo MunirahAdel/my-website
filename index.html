@@ -330,7 +330,10 @@
   <div class="hero">
     <!-- Canvas animation — shows in preview and as fallback.
          On your live site, swap this canvas tag for the <video> block below. -->
-    <canvas id="heroCanvas"></canvas>
+<video class="hero-video" autoplay muted loop playsinline preload="none">
+  <source src="assets/HeroWeb.mp4" type="video/mp4" />
+</video>
+    
 
     <!-- ─── SWAP IN YOUR VIDEO for production ───────────────────────
     <video class="hero-video" autoplay muted loop playsinline preload="none"
@@ -507,85 +510,7 @@
     const nav = document.getElementById("nav");
     window.addEventListener("scroll", () => { nav.classList.toggle("scrolled", window.scrollY > 40); });
 
-    // ── Hero canvas animation ──
-    // Slow-drifting particles + soft glow blobs, same visual feel as the stock video.
-    // On your live Netlify site, remove the <canvas> tag and uncomment the <video> block instead.
-    (function () {
-      const canvas = document.getElementById("heroCanvas");
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-
-      function resize() {
-        canvas.width  = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-      }
-      resize();
-      window.addEventListener("resize", resize);
-
-      // Soft glow blobs
-      const blobs = Array.from({ length: 5 }, (_, i) => ({
-        x: Math.random(), y: Math.random(),
-        r: 0.25 + Math.random() * 0.2,
-        vx: (Math.random() - 0.5) * 0.00012,
-        vy: (Math.random() - 0.5) * 0.00008,
-        hue: i < 2 ? 38 : 30,          // warm amber tones matching --accent
-        alpha: 0.04 + Math.random() * 0.04,
-      }));
-
-      // Fine particles
-      const pts = Array.from({ length: 90 }, () => ({
-        x: Math.random(), y: Math.random(),
-        vx: (Math.random() - 0.5) * 0.00018,
-        vy: -0.00006 - Math.random() * 0.00014,  // drift upward slowly
-        size: 0.6 + Math.random() * 1.2,
-        alpha: 0.15 + Math.random() * 0.35,
-        life: Math.random(),
-      }));
-
-      function draw() {
-        const W = canvas.width, H = canvas.height;
-        ctx.clearRect(0, 0, W, H);
-
-        // Blobs
-        blobs.forEach(b => {
-          b.x += b.vx; b.y += b.vy;
-          if (b.x < -b.r) b.x = 1 + b.r;
-          if (b.x > 1 + b.r) b.x = -b.r;
-          if (b.y < -b.r) b.y = 1 + b.r;
-          if (b.y > 1 + b.r) b.y = -b.r;
-
-          const g = ctx.createRadialGradient(
-            b.x * W, b.y * H, 0,
-            b.x * W, b.y * H, b.r * W
-          );
-          g.addColorStop(0, `hsla(${b.hue}, 40%, 70%, ${b.alpha})`);
-          g.addColorStop(1, `hsla(${b.hue}, 40%, 70%, 0)`);
-          ctx.fillStyle = g;
-          ctx.fillRect(0, 0, W, H);
-        });
-
-        // Particles
-        pts.forEach(p => {
-          p.x += p.vx; p.y += p.vy;
-          p.life += 0.003;
-          if (p.y < -0.02 || p.life > 1) {
-            // reset at bottom
-            p.x = Math.random(); p.y = 1.02;
-            p.life = 0;
-            p.vx = (Math.random() - 0.5) * 0.00018;
-            p.vy = -0.00006 - Math.random() * 0.00014;
-          }
-          const fade = Math.sin(p.life * Math.PI); // fade in + out
-          ctx.beginPath();
-          ctx.arc(p.x * W, p.y * H, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(200, 184, 154, ${p.alpha * fade * 0.6})`;
-          ctx.fill();
-        });
-
-        requestAnimationFrame(draw);
-      }
-      draw();
-    })();
+  
 
     // ── Cursor ──
     const cursor = document.getElementById("cursor");
